@@ -10,8 +10,6 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.Visitable;
 
-import junit.framework.Assert;
-
 /**
  * This test suite does all the checks one by one as shown in the "/Test.java" resource.
  * To avoid clumsy copying of the AST (e.g. via defining clone()), we'll just compare the
@@ -126,17 +124,63 @@ class TryStmtTransformerTest {
 		parseAndAssert(input, expected);
 	}
 	
+	@Test
+	public void multipleResources() {
+		String input = "public void multipleResources() {\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    Span span = new DefaultSpanBuilder(a);\n" + 
+				"    try (String b = new String(\"asdf\"); Scope s = Tracing.activateSpan(span) ; AnotherType c = GimmeThis.fromStaticMethod(1,2,3)) {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    } finally {\n" + 
+				"        span.finish();\n" + 
+				"    }\n" + 
+				"}";
+		String expected = "public void multipleResources() {\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    try (String b = new String(\"asdf\");\n" + 
+				"        AnotherType c = GimmeThis.fromStaticMethod(1, 2, 3)) {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    }\n" + 
+				"}";
+		parseAndAssert(input, expected);
+	}
+	
+	@Test
+	public void finallyBlockWithNontracingStatements() {
+		String input = "public void finallyBlockWithNontracingStatements() {\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    Span span = new DefaultSpanBuilder(a);\n" + 
+				"    try(String b = new String(\"asdf\"); Scope s = Tracing.activateSpan(span)) {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    } finally {\n" + 
+				"        anotherStatement;\n" + 
+				"        span.finish();\n" + 
+				"        andAnotherStatement;\n" + 
+				"    }\n" + 
+				"}";
+		String expected = "public void finallyBlockWithNontracingStatements() {\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    try (String b = new String(\"asdf\")) {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    } finally {\n" + 
+				"        anotherStatement;\n" + 
+				"        andAnotherStatement;\n" + 
+				"    }\n" + 
+				"}";
+		parseAndAssert(input, expected);
+	}
+	
 	private static void parseAndAssert(String input, String expected) {
 		MethodDeclaration md = StaticJavaParser.parseMethodDeclaration(input);
-		assertEquals(transform(md), expected);
+		assertEquals(expected, transform(md));
 	}
 	
 	private static void parseAndAssertUnchanged(String input) {
 		parseAndAssert(input, input);
 	}
 	
-	private static String transform(Visitable cu) {
-		return cu.accept(new TryStmtTransformer(), null).toString();
+	private static String transform(Visitable v) {
+		return v.accept(new TryStmtTransformer(), null).toString();
 	}
 
 }

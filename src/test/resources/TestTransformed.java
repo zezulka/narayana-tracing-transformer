@@ -62,7 +62,7 @@ public class A {
         }
     }
 
-    public void f() {
+    public void multipleResources() {
         System.out.println("abcd");
         try (String b = new String("asdf");
             AnotherType c = GimmeThis.fromStaticMethod(1, 2, 3)) {

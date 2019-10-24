@@ -17,6 +17,11 @@ public class ImportRemover extends ModifierVisitor<Void> {
  		this.sourceName = sourceName;
  	}
 	
+	// for testing purposes only
+	ImportRemover() {
+		this(null);
+	}
+	
 	@Override
 	public Node visit(ImportDeclaration n, Void arg) {
 		String iName = n.getNameAsString();
