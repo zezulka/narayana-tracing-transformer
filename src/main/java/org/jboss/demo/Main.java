@@ -4,7 +4,7 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
 public class Main {
-
+	
 	/*
 	 * Toy which outputs the modified AST (as a valid Java source) to stdout.
 	 * For the expected output and further information, please consult the unit tests. 

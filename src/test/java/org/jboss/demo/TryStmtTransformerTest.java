@@ -94,7 +94,8 @@ class TryStmtTransformerTest {
 				"}";
 		String expected = "public void mostTrivial() {\n" + 
 				"    int a;\n" + 
-				"    System.out.println(\"abcd\");\n" + 
+				"    System.out.println(\"abcd\");\n" +
+				"    com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();\n" +
 				"    {\n" + 
 				"        System.out.println(\"efgh\");\n" + 
 				"    }\n" + 
@@ -116,7 +117,8 @@ class TryStmtTransformerTest {
 				"    }\n" + 
 				"}";
 		String expected = "public void spanDeclarationSpanningOverMultipleLines() {\n" + 
-				"    System.out.println(\"abcd\");\n" + 
+				"    System.out.println(\"abcd\");\n" +
+				"    com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();\n" +
 				"    {\n" + 
 				"        System.out.println(\"efgh\");\n" + 
 				"    }\n" + 
@@ -137,6 +139,7 @@ class TryStmtTransformerTest {
 				"}";
 		String expected = "public void multipleResources() {\n" + 
 				"    System.out.println(\"abcd\");\n" + 
+				"    com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();\n" +
 				"    try (String b = new String(\"asdf\");\n" + 
 				"        AnotherType c = GimmeThis.fromStaticMethod(1, 2, 3)) {\n" + 
 				"        System.out.println(\"efgh\");\n" + 
@@ -160,6 +163,7 @@ class TryStmtTransformerTest {
 				"}";
 		String expected = "public void finallyBlockWithNontracingStatements() {\n" + 
 				"    System.out.println(\"abcd\");\n" + 
+				"    com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();\n" +
 				"    try (String b = new String(\"asdf\")) {\n" + 
 				"        System.out.println(\"efgh\");\n" + 
 				"    } finally {\n" + 

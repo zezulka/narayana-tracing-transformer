@@ -50,6 +50,7 @@ public class A {
     public void mostTrivial() {
         int a;
         System.out.println("abcd");
+        com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();
         {
             System.out.println("efgh");
         }
@@ -57,6 +58,7 @@ public class A {
 
     public void spanDeclarationSpanningOverMultipleLines() {
         System.out.println("abcd");
+        com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();
         {
             System.out.println("efgh");
         }
@@ -64,6 +66,7 @@ public class A {
 
     public void multipleResources() {
         System.out.println("abcd");
+        com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();
         try (String b = new String("asdf");
             AnotherType c = GimmeThis.fromStaticMethod(1, 2, 3)) {
             System.out.println("efgh");
@@ -72,6 +75,7 @@ public class A {
 
     public void finallyBlockWithNontracingStatements() {
         System.out.println("abcd");
+        com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();
         try (String b = new String("asdf")) {
             System.out.println("efgh");
         } finally {
