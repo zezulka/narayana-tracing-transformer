@@ -12,12 +12,16 @@ public class Main {
 
 	public static void main(String[] args) {
 		for(String fPath : args) {
-			CompilationUnit cu;
 			try {
 				File f = new File(fPath);
-				cu = StaticJavaParser.parse(f);
+				CompilationUnit cu = StaticJavaParser.parse(f);
 				cu.accept(new TryStmtTransformer(fPath), null)
 				  .accept(new ImportRemover(fPath), null);
+				// BasicAction is quite specific and requires extra care
+				// e.g. there are places in this class where there is manual management of spans
+				if(fPath.endsWith("BasicAction.java")) {
+					cu.accept(new BasicActionTransformer(fPath), null);	
+				}
 				PrintWriter w = new PrintWriter(f, "UTF-8");
 				w.write(cu.toString());
 				w.close();	

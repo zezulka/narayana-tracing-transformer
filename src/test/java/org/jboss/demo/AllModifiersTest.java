@@ -14,7 +14,9 @@ class AllModifiersTest {
 	public void runEverything() {
 		String srcName = "Test.java";
 		CompilationUnit cu = StaticJavaParser.parse(Main.class.getResourceAsStream("/" + srcName));
-		cu.accept(new TryStmtTransformer(srcName), null).accept(new ImportRemover(srcName), null);
+		cu.accept(new TryStmtTransformer(srcName), null)
+		  .accept(new ImportRemover(srcName), null)
+		  .accept(new BasicActionTransformer(srcName), null);
 		String transformed = cu.toString();
 		String expected;
 		try(Scanner s = new Scanner(Main.class.getResourceAsStream("/TestTransformed.java"))) {

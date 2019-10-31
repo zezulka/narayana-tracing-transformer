@@ -113,4 +113,14 @@ public class A {
             andAnotherStatement;
         }
     }
+
+    public void tracingStatementsOutsideTryBlock() {
+        int a;
+        a++;
+    }
+
+    public void tracingStatementsOutsideTryBlockNew() {
+        int a;
+        a++;
+    }
 }

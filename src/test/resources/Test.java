@@ -137,4 +137,16 @@ public class A {
             andAnotherStatement;
         }
     }
+
+    public void tracingStatementsOutsideTryBlock() {
+        int a;
+        Tracing.finishWithoutRemoval("FEDC-A987-1234");
+        a++;
+    }
+   
+    public void tracingStatementsOutsideTryBlockNew() {
+        int a;
+        new Tracing.RootScopeBuilder().build();
+        a++;
+    }
 }
