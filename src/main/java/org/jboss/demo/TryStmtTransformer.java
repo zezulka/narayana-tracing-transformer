@@ -33,7 +33,7 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 			// since we've found a Scope resource, there MUST be a finishing
 			// statement in the finally block!
 			BlockStmt finBlock = tryStmt.getFinallyBlock()
-					.orElseThrow(() -> new TransformerException(sourceName, tryStmt));
+					.orElseThrow(() -> new TransformerException(sourceName, tryStmt, "spans should be closed (span.finish()) in the finally block of the appropriate try statement."));
 			removeAllTracingHelperCalls(tryStmt);
 			tryStmt.getParentNode().get().walk(VariableDeclarationExpr.class, vde -> {
 				if (isSpanVariableDeclaration(vde, finBlock)) {
