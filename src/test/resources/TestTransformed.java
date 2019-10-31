@@ -56,6 +56,36 @@ public class A {
         }
     }
 
+    public void helperFunctionsInsideTryBody() {
+        int a;
+        System.out.println("abcd");
+        com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();
+        {
+            System.out.println("efgh");
+            Another.staticTracingMethod(which, should, remain);
+        }
+    }
+
+    public void helperFunctionsInsideFinallyBody() {
+        int a;
+        System.out.println("abcd");
+        com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();
+        {
+            System.out.println("efgh");
+        }
+    }
+
+    public void helperFunctionsInsideFinallyBodyTwo() {
+        int a;
+        System.out.println("abcd");
+        com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();
+        try {
+            System.out.println("efgh");
+        } finally {
+            a++;
+        }
+    }
+
     public void spanDeclarationSpanningOverMultipleLines() {
         System.out.println("abcd");
         com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();

@@ -47,7 +47,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>org.jboss.test.Main</mainClass>
+							<mainClass>org.jboss.demo.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

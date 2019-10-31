@@ -4,6 +4,7 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.TryStmt;
@@ -33,6 +34,7 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 			// statement in the finally block!
 			BlockStmt finBlock = tryStmt.getFinallyBlock()
 					.orElseThrow(() -> new TransformerException(sourceName, tryStmt));
+			removeAllTracingHelperCalls(tryStmt);
 			tryStmt.getParentNode().get().walk(VariableDeclarationExpr.class, vde -> {
 				if (isSpanVariableDeclaration(vde, finBlock)) {
 					vde.removeForced();
@@ -46,6 +48,19 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 			}
 		}
 		return tryStmt;
+	}
+	
+	private void removeAllTracingHelperCalls(TryStmt t) {
+		removeAllTracingHelpersForBlock(t.getTryBlock());
+		t.getFinallyBlock().ifPresent(b -> removeAllTracingHelpersForBlock(b));
+	}
+	
+    private void removeAllTracingHelpersForBlock(BlockStmt t) {
+		t.walk(MethodCallExpr.class, mce -> {
+			if(mce.toString().startsWith("Tracing.")) {
+				mce.removeForced();
+			}
+		});
 	}
 	
 	/**

@@ -28,14 +28,14 @@ public class A {
     }
 
     public void nonTracingStatements() {
-    	int a, b, c;
+        int a, b, c;
         a++;
         b--;
         c;
     }
 
     public void mostTrivialNonTracing() {
-    	int a;
+        int a;
         System.out.println("abcd");
         a++;
         try (String s = new String("abcd")) {
@@ -44,25 +44,63 @@ public class A {
     }
     
     public void anotherMostTrivialNonTracing() {
-    	int a;
+        int a;
         System.out.println("abcd");
         a++;
         try (String s = new String("abcd")) {
             System.out.println("efgh");
         } finally {
-        	// let's pretend we can close a String
+            // let's pretend we can close a String
             s.close();
         }
     }
     
     public void mostTrivial() {
-    	int a;
+        int a;
         System.out.println("abcd");
         Span span = new DefaultSpanBuilder(a);
         try (Scope s = Tracing.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
             span.finish();
+        }
+    }
+
+    public void helperFunctionsInsideTryBody() {
+        int a;
+        System.out.println("abcd");
+        Span span = new DefaultSpanBuilder(a);
+        try (Scope s = Tracing.activateSpan(span)) {
+            System.out.println("efgh");
+            Tracing.addTag(TagName.ABCD, null);
+            Another.staticTracingMethod(which, should, remain);
+        } finally {
+            span.finish();
+        }
+    }
+
+    public void helperFunctionsInsideFinallyBody() {
+        int a;
+        System.out.println("abcd");
+        Span span = new DefaultSpanBuilder(a);
+        try (Scope s = Tracing.activateSpan(span)) {
+            System.out.println("efgh");
+        } finally {
+            span.finish();
+            Tracing.finishWithoutRemoval("FEDC-A987-1234");
+        }
+    }
+
+    public void helperFunctionsInsideFinallyBodyTwo() {
+        int a;
+        System.out.println("abcd");
+        Span span = new DefaultSpanBuilder(a);
+        try (Scope s = Tracing.activateSpan(span)) {
+            System.out.println("efgh");
+        } finally {
+            span.finish();
+            Tracing.finishWithoutRemoval("FEDC-A987-1234");
+            a++;
         }
     }
 
@@ -78,25 +116,25 @@ public class A {
         }
     }
     
-	public void multipleResources() {
-	    System.out.println("abcd");
-	    Span span = new DefaultSpanBuilder(a);
-	    try (String b = new String("asdf"); Scope s = Tracing.activateSpan(span) ; AnotherType c = GimmeThis.fromStaticMethod(1,2,3)) {
-	        System.out.println("efgh");
-	    } finally {
-	        span.finish();
-	    }
-	}
+    public void multipleResources() {
+        System.out.println("abcd");
+        Span span = new DefaultSpanBuilder(a);
+        try (String b = new String("asdf"); Scope s = Tracing.activateSpan(span); AnotherType c = GimmeThis.fromStaticMethod(1, 2, 3)) {
+            System.out.println("efgh");
+        } finally {
+            span.finish();
+        }
+    }
     
-	public void finallyBlockWithNontracingStatements() {
-	    System.out.println("abcd");
-	    Span span = new DefaultSpanBuilder(a);
-	    try(String b = new String("asdf"); Scope s = Tracing.activateSpan(span)) {
-	        System.out.println("efgh");
-	    } finally {
-	        anotherStatement;
-	        span.finish();
-	        andAnotherStatement;
-	    }
-	}
+    public void finallyBlockWithNontracingStatements() {
+        System.out.println("abcd");
+        Span span = new DefaultSpanBuilder(a);
+        try(String b = new String("asdf"); Scope s = Tracing.activateSpan(span)) {
+            System.out.println("efgh");
+        } finally {
+            anotherStatement;
+            span.finish();
+            andAnotherStatement;
+        }
+    }
 }

@@ -149,6 +149,83 @@ class TryStmtTransformerTest {
 	}
 	
 	@Test
+	public void helperFunctionsInsideTryBody() {
+		String input = "public void helperFunctionsInsideTryBody() {\n" + 
+				"    int a;\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    Span span = new DefaultSpanBuilder(a);\n" + 
+				"    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"        Tracing.addTag(TagName.ABCD, null);\n" + 
+				"        Another.staticTracingMethod(which, should, remain);\n" + 
+				"    } finally {\n" + 
+				"        span.finish();\n" + 
+				"    }\n" + 
+				"}";
+		String expected = "public void helperFunctionsInsideTryBody() {\n" + 
+				"    int a;\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();\n" + 
+				"    {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"        Another.staticTracingMethod(which, should, remain);\n" + 
+				"    }\n" + 
+				"}";
+		parseAndAssert(input, expected);
+	}
+	
+	@Test
+	public void helperFunctionsInsideFinallyBody() {
+		String input = "public void helperFunctionsInsideFinallyBody() {\n" + 
+				"    int a;\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    Span span = new DefaultSpanBuilder(a);\n" + 
+				"    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    } finally {\n" + 
+				"        span.finish();\n" + 
+				"        Tracing.finishWithoutRemoval(\"FEDC-A987-1234\");\n" + 
+				"    }\n" + 
+				"}";
+		String expected = "public void helperFunctionsInsideFinallyBody() {\n" + 
+				"    int a;\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();\n" + 
+				"    {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    }\n" + 
+				"}";
+		parseAndAssert(input, expected);
+	}
+	
+	@Test
+	public void helperFunctionsInsideFinallyBodyTwo() {
+		String input = "public void helperFunctionsInsideFinallyBody() {\n" + 
+				"    int a;\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    Span span = new DefaultSpanBuilder(a);\n" + 
+				"    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    } finally {\n" + 
+				"        span.finish();\n" + 
+				"        Tracing.finishWithoutRemoval(\"FEDC-A987-1234\");\n" + 
+				"        a++;\n" +
+				"    }\n" + 
+				"}";
+		String expected = "public void helperFunctionsInsideFinallyBody() {\n" + 
+				"    int a;\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();\n" + 
+				"    try {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    } finally {\n" + 
+				"        a++;\n" +
+				"    }\n" + 
+				"}";
+		parseAndAssert(input, expected);
+	}
+	
+	@Test
 	public void finallyBlockWithNontracingStatements() {
 		String input = "public void finallyBlockWithNontracingStatements() {\n" + 
 				"    System.out.println(\"abcd\");\n" + 
