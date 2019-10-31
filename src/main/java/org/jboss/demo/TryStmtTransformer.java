@@ -47,6 +47,8 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 				}
 			}
 		}
+		// for some very weird reason, we have manually call the recursion here
+		tryStmt.getTryBlock().walk(TryStmt.class, n -> this.visit(n, null));
 		return tryStmt;
 	}
 	
