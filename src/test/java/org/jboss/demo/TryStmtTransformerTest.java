@@ -251,9 +251,27 @@ class TryStmtTransformerTest {
 		parseAndAssert(input, expected);
 	}
 	
+	@Test
+	public void tracingWithoutSpanFinish() {
+		String input = "public void mostTrivial() {\n" + 
+				"    int a;\n" + 
+				"    System.out.println(\"abcd\");\n" + 
+				"    Span span = new DefaultSpanBuilder(a);\n" + 
+				"    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+				"        System.out.println(\"efgh\");\n" + 
+				"    }\n" + 
+				"}";
+		assertParseFails(input);
+	}
+	
 	private static void parseAndAssert(String input, String expected) {
 		MethodDeclaration md = StaticJavaParser.parseMethodDeclaration(input);
 		assertEquals(expected, transform(md));
+	}
+	
+	private static void assertParseFails(String input) {
+		MethodDeclaration md = StaticJavaParser.parseMethodDeclaration(input);
+		assertThrows(TransformerException.class, () -> transform(md));
 	}
 	
 	private static void parseAndAssertUnchanged(String input) {
