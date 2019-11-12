@@ -38,7 +38,7 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 			tryStmt.getParentNode().get().walk(VariableDeclarationExpr.class, vde -> {
 				if (isSpanVariableDeclaration(vde, finBlock)) {
 					vde.removeForced();
-				}		
+				}
 			});
 			if (finBlock.getChildNodes().isEmpty()) {
 				finBlock.remove();
@@ -59,7 +59,7 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 	
     private void removeAllTracingHelpersForBlock(BlockStmt t) {
 		t.walk(MethodCallExpr.class, mce -> {
-			if(mce.toString().startsWith("Tracing.")) {
+			if(mce.toString().startsWith("TracingUtils.")) {
 				mce.removeForced();
 			}
 		});

@@ -5,7 +5,7 @@ import io.narayana.more.pkgs.ClassWhichShouldntBeDeleted;
 import io.narayana.tracing.SpanName;
 import io.narayana.tracing.TagName;
 import io.narayana.tracing.Tracing;
-import io.narayana.tracing.Tracing.DefaultSpanBuilder;
+import io.narayana.tracing.DefaultSpanBuilder;
 import io.narayana.tracing.TransactionStatus;
 import io.opentracing.Scope;
 import io.opentracing.Span;
@@ -59,7 +59,7 @@ public class A {
         int a;
         System.out.println("abcd");
         Span span = new DefaultSpanBuilder(a);
-        try (Scope s = Tracing.activateSpan(span)) {
+        try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
             span.finish();
@@ -70,9 +70,9 @@ public class A {
         int a;
         System.out.println("abcd");
         Span span = new DefaultSpanBuilder(a);
-        try (Scope s = Tracing.activateSpan(span)) {
+        try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
-            Tracing.addTag(TagName.ABCD, null);
+            TracingUtils.addTag(TagName.ABCD, null);
             Another.staticTracingMethod(which, should, remain);
         } finally {
             span.finish();
@@ -83,11 +83,11 @@ public class A {
         int a;
         System.out.println("abcd");
         Span span = new DefaultSpanBuilder(a);
-        try (Scope s = Tracing.activateSpan(span)) {
+        try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
             span.finish();
-            Tracing.finishWithoutRemoval("FEDC-A987-1234");
+            TracingUtils.finishWithoutRemoval("FEDC-A987-1234");
         }
     }
 
@@ -95,11 +95,11 @@ public class A {
         int a;
         System.out.println("abcd");
         Span span = new DefaultSpanBuilder(a);
-        try (Scope s = Tracing.activateSpan(span)) {
+        try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
             span.finish();
-            Tracing.finishWithoutRemoval("FEDC-A987-1234");
+            TracingUtils.finishWithoutRemoval("FEDC-A987-1234");
             a++;
         }
     }
@@ -109,7 +109,7 @@ public class A {
         Span span = new DefaultSpanBuilder(a)
                     .tag(b)
                     .tag(c);
-        try (Scope s = Tracing.activateSpan(span)) {
+        try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
             span.finish();
@@ -119,7 +119,7 @@ public class A {
     public void multipleResources() {
         System.out.println("abcd");
         Span span = new DefaultSpanBuilder(a);
-        try (String b = new String("asdf"); Scope s = Tracing.activateSpan(span); AnotherType c = GimmeThis.fromStaticMethod(1, 2, 3)) {
+        try (String b = new String("asdf"); Scope s = TracingUtils.activateSpan(span); AnotherType c = GimmeThis.fromStaticMethod(1, 2, 3)) {
             System.out.println("efgh");
         } finally {
             span.finish();
@@ -129,7 +129,7 @@ public class A {
     public void finallyBlockWithNontracingStatements() {
         System.out.println("abcd");
         Span span = new DefaultSpanBuilder(a);
-        try(String b = new String("asdf"); Scope s = Tracing.activateSpan(span)) {
+        try(String b = new String("asdf"); Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
             anotherStatement;
@@ -140,13 +140,13 @@ public class A {
 
     public void tracingStatementsOutsideTryBlock() {
         int a;
-        Tracing.finishWithoutRemoval("FEDC-A987-1234");
+        TracingUtils.finishWithoutRemoval("FEDC-A987-1234");
         a++;
     }
    
     public void tracingStatementsOutsideTryBlockNew() {
         int a;
-        new Tracing.RootScopeBuilder().build();
+        new RootSpanBuilder().build();
         a++;
     }
 }

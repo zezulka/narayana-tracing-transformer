@@ -14,7 +14,7 @@ public class BasicActionTransformerTest {
 	public void basic() {
 		String input = "public void tracingStatementsOutsideTryBlock() {\n" + 
 				"    int a;\n" + 
-				"    Tracing.finishWithoutRemoval(\"FEDC-A987-1234\");\n" + 
+				"    TracingUtils.finishWithoutRemoval(\"FEDC-A987-1234\");\n" + 
 				"    a++;\n" + 
 				"}";
 		String expected = "public void tracingStatementsOutsideTryBlock() {\n" + 
@@ -28,7 +28,7 @@ public class BasicActionTransformerTest {
 	public void basicNew() {
 		String input = "public void tracingStatementsOutsideTryBlock() {\n" + 
 				"    int a;\n" + 
-				"    new Tracing.RootScopeBuilder().build();\n" + 
+				"    new RootSpanBuilder().build();\n" + 
 				"    a++;\n" + 
 				"}";
 		String expected = "public void tracingStatementsOutsideTryBlock() {\n" + 

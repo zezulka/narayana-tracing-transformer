@@ -15,9 +15,9 @@ public class BasicActionTransformer extends ModifierVisitor<Void> {
 	@Override
 	public Visitable visit(MethodCallExpr mce, Void arg) {
 		String mceStr = mce.toString();
-		// the new Tracing. catches the use case when we create a root scope (which should happen
-		// only in place of code, so this is a very subtle but needed corner case
-		if (mceStr.startsWith("Tracing.") || mceStr.startsWith("new Tracing.")) {
+		// the new new RootSpanBuilder catches the use case when we create a root scope which should happen
+		// only in at one place of code, so this is a very subtle but needed corner case
+		if (mceStr.startsWith("TracingUtils.") || mceStr.startsWith("new RootSpanBuilder")) {
 			mce.removeForced();
 		}
 		return mce;

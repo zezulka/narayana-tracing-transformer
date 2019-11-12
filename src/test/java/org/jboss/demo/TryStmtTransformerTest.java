@@ -86,7 +86,7 @@ class TryStmtTransformerTest {
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
                 "    Span span = new DefaultSpanBuilder(a);\n" + 
-                "    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+                "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
                 "        span.finish();\n" + 
@@ -110,7 +110,7 @@ class TryStmtTransformerTest {
                 "    Span span = new DefaultSpanBuilder(a)\n" + 
                 "                .tag(b)\n" + 
                 "                .tag(c);\n" + 
-                "    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+                "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
                 "        span.finish();\n" + 
@@ -131,7 +131,7 @@ class TryStmtTransformerTest {
         String input = "public void multipleResources() {\n" + 
                 "    System.out.println(\"abcd\");\n" + 
                 "    Span span = new DefaultSpanBuilder(a);\n" + 
-                "    try (String b = new String(\"asdf\"); Scope s = Tracing.activateSpan(span) ; AnotherType c = GimmeThis.fromStaticMethod(1,2,3)) {\n" + 
+                "    try (String b = new String(\"asdf\"); Scope s = TracingUtils.activateSpan(span) ; AnotherType c = GimmeThis.fromStaticMethod(1,2,3)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
                 "        span.finish();\n" + 
@@ -154,9 +154,9 @@ class TryStmtTransformerTest {
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
                 "    Span span = new DefaultSpanBuilder(a);\n" + 
-                "    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+                "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
-                "        Tracing.addTag(TagName.ABCD, null);\n" + 
+                "        TracingUtils.addTag(TagName.ABCD, null);\n" + 
                 "        Another.staticTracingMethod(which, should, remain);\n" + 
                 "    } finally {\n" + 
                 "        span.finish();\n" + 
@@ -180,11 +180,11 @@ class TryStmtTransformerTest {
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
                 "    Span span = new DefaultSpanBuilder(a);\n" + 
-                "    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+                "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
                 "        span.finish();\n" + 
-                "        Tracing.finishWithoutRemoval(\"FEDC-A987-1234\");\n" + 
+                "        TracingUtils.finishWithoutRemoval(\"FEDC-A987-1234\");\n" + 
                 "    }\n" + 
                 "}";
         String expected = "public void helperFunctionsInsideFinallyBody() {\n" + 
@@ -204,11 +204,11 @@ class TryStmtTransformerTest {
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
                 "    Span span = new DefaultSpanBuilder(a);\n" + 
-                "    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+                "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
                 "        span.finish();\n" + 
-                "        Tracing.finishWithoutRemoval(\"FEDC-A987-1234\");\n" + 
+                "        TracingUtils.finishWithoutRemoval(\"FEDC-A987-1234\");\n" + 
                 "        a++;\n" +
                 "    }\n" + 
                 "}";
@@ -230,7 +230,7 @@ class TryStmtTransformerTest {
         String input = "public void finallyBlockWithNontracingStatements() {\n" + 
                 "    System.out.println(\"abcd\");\n" + 
                 "    Span span = new DefaultSpanBuilder(a);\n" + 
-                "    try(String b = new String(\"asdf\"); Scope s = Tracing.activateSpan(span)) {\n" + 
+                "    try(String b = new String(\"asdf\"); Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
                 "        anotherStatement;\n" + 
@@ -257,7 +257,7 @@ class TryStmtTransformerTest {
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
                 "    Span span = new DefaultSpanBuilder(a);\n" + 
-                "    try (Scope s = Tracing.activateSpan(span)) {\n" + 
+                "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    }\n" + 
                 "}";
@@ -271,7 +271,7 @@ class TryStmtTransformerTest {
                 "        int a;\n" + 
                 "        for(;;) {\n" + 
                 "            Span span = new DefaultSpanBuilder(a);\n" + 
-                "            try (Scope s = Tracing.activateSpan(span)) {\n" + 
+                "            try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "                a++;\n" + 
                 "            } finally {\n" + 
                 "                span.finish();\n" + 
