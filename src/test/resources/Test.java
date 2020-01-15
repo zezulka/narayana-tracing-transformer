@@ -5,7 +5,7 @@ import io.narayana.more.pkgs.ClassWhichShouldntBeDeleted;
 import io.narayana.tracing.SpanName;
 import io.narayana.tracing.TagName;
 import io.narayana.tracing.Tracing;
-import io.narayana.tracing.DefaultSpanBuilder;
+import io.narayana.tracing.NarayanaSpanBuilder;
 import io.narayana.tracing.TransactionStatus;
 import io.opentracing.Scope;
 import io.opentracing.Span;
@@ -58,7 +58,7 @@ public class A {
     public void mostTrivial() {
         int a;
         System.out.println("abcd");
-        Span span = new DefaultSpanBuilder(a);
+        Span span = new NarayanaSpanBuilder(a);
         try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
@@ -69,7 +69,7 @@ public class A {
     public void helperFunctionsInsideTryBody() {
         int a;
         System.out.println("abcd");
-        Span span = new DefaultSpanBuilder(a);
+        Span span = new NarayanaSpanBuilder(a);
         try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
             TracingUtils.addTag(TagName.ABCD, null);
@@ -82,7 +82,7 @@ public class A {
     public void helperFunctionsInsideFinallyBody() {
         int a;
         System.out.println("abcd");
-        Span span = new DefaultSpanBuilder(a);
+        Span span = new NarayanaSpanBuilder(a);
         try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
@@ -94,7 +94,7 @@ public class A {
     public void helperFunctionsInsideFinallyBodyTwo() {
         int a;
         System.out.println("abcd");
-        Span span = new DefaultSpanBuilder(a);
+        Span span = new NarayanaSpanBuilder(a);
         try (Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {
@@ -106,7 +106,7 @@ public class A {
 
     public void spanDeclarationSpanningOverMultipleLines() {
         System.out.println("abcd");
-        Span span = new DefaultSpanBuilder(a)
+        Span span = new NarayanaSpanBuilder(a)
                     .tag(b)
                     .tag(c);
         try (Scope s = TracingUtils.activateSpan(span)) {
@@ -118,7 +118,7 @@ public class A {
     
     public void multipleResources() {
         System.out.println("abcd");
-        Span span = new DefaultSpanBuilder(a);
+        Span span = new NarayanaSpanBuilder(a);
         try (String b = new String("asdf"); Scope s = TracingUtils.activateSpan(span); AnotherType c = GimmeThis.fromStaticMethod(1, 2, 3)) {
             System.out.println("efgh");
         } finally {
@@ -128,7 +128,7 @@ public class A {
     
     public void finallyBlockWithNontracingStatements() {
         System.out.println("abcd");
-        Span span = new DefaultSpanBuilder(a);
+        Span span = new NarayanaSpanBuilder(a);
         try(String b = new String("asdf"); Scope s = TracingUtils.activateSpan(span)) {
             System.out.println("efgh");
         } finally {

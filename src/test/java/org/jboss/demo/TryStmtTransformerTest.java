@@ -85,7 +85,7 @@ class TryStmtTransformerTest {
         String input = "public void mostTrivial() {\n" + 
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
-                "    Span span = new DefaultSpanBuilder(a);\n" + 
+                "    Span span = new NaraynaSpanBuilder(a);\n" + 
                 "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
@@ -107,7 +107,7 @@ class TryStmtTransformerTest {
     public void spanDeclarationSpanningOverMultipleLines() {
         String input = "public void spanDeclarationSpanningOverMultipleLines() {\n" + 
                 "    System.out.println(\"abcd\");\n" + 
-                "    Span span = new DefaultSpanBuilder(a)\n" + 
+                "    Span span = new NarayanaSpanBuilder(a)\n" + 
                 "                .tag(b)\n" + 
                 "                .tag(c);\n" + 
                 "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
@@ -130,7 +130,7 @@ class TryStmtTransformerTest {
     public void multipleResources() {
         String input = "public void multipleResources() {\n" + 
                 "    System.out.println(\"abcd\");\n" + 
-                "    Span span = new DefaultSpanBuilder(a);\n" + 
+                "    Span span = new NaraynaSpanBuilder(a);\n" + 
                 "    try (String b = new String(\"asdf\"); Scope s = TracingUtils.activateSpan(span) ; AnotherType c = GimmeThis.fromStaticMethod(1,2,3)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
@@ -153,7 +153,7 @@ class TryStmtTransformerTest {
         String input = "public void helperFunctionsInsideTryBody() {\n" + 
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
-                "    Span span = new DefaultSpanBuilder(a);\n" + 
+                "    Span span = new NarayanaSpanBuilder(a);\n" + 
                 "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "        TracingUtils.addTag(TagName.ABCD, null);\n" + 
@@ -179,7 +179,7 @@ class TryStmtTransformerTest {
         String input = "public void helperFunctionsInsideFinallyBody() {\n" + 
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
-                "    Span span = new DefaultSpanBuilder(a);\n" + 
+                "    Span span = new NarayanaSpanBuilder(a);\n" + 
                 "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
@@ -203,7 +203,7 @@ class TryStmtTransformerTest {
         String input = "public void helperFunctionsInsideFinallyBody() {\n" + 
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
-                "    Span span = new DefaultSpanBuilder(a);\n" + 
+                "    Span span = new NarayanaSpanBuilder(a);\n" + 
                 "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
@@ -229,7 +229,7 @@ class TryStmtTransformerTest {
     public void finallyBlockWithNontracingStatements() {
         String input = "public void finallyBlockWithNontracingStatements() {\n" + 
                 "    System.out.println(\"abcd\");\n" + 
-                "    Span span = new DefaultSpanBuilder(a);\n" + 
+                "    Span span = new NarayanaSpanBuilder(a);\n" + 
                 "    try(String b = new String(\"asdf\"); Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    } finally {\n" + 
@@ -256,7 +256,7 @@ class TryStmtTransformerTest {
         String input = "public void mostTrivial() {\n" + 
                 "    int a;\n" + 
                 "    System.out.println(\"abcd\");\n" + 
-                "    Span span = new DefaultSpanBuilder(a);\n" + 
+                "    Span span = new NarayanaSpanBuilder(a);\n" + 
                 "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "        System.out.println(\"efgh\");\n" + 
                 "    }\n" + 
@@ -270,7 +270,7 @@ class TryStmtTransformerTest {
                 "    try (String a = new String(\"abcd\")) {\n" + 
                 "        int a;\n" + 
                 "        for(;;) {\n" + 
-                "            Span span = new DefaultSpanBuilder(a);\n" + 
+                "            Span span = new NarayanaSpanBuilder(a);\n" + 
                 "            try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
                 "                a++;\n" + 
                 "            } finally {\n" + 
