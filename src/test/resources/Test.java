@@ -146,7 +146,7 @@ public class A {
    
     public void tracingStatementsOutsideTryBlockNew() {
         int a;
-        new RootSpanBuilder().build();
+        TracingUtils.start("abcd");
         a++;
     }
 }

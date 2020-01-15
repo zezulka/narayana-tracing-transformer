@@ -28,7 +28,7 @@ public class BasicActionTransformerTest {
 	public void basicNew() {
 		String input = "public void tracingStatementsOutsideTryBlock() {\n" + 
 				"    int a;\n" + 
-				"    new RootSpanBuilder().build();\n" + 
+				"    TracingUtils.start(\"FEDC-A987-1234\");\n" + 
 				"    a++;\n" + 
 				"}";
 		String expected = "public void tracingStatementsOutsideTryBlock() {\n" + 
