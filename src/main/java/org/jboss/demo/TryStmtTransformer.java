@@ -1,7 +1,6 @@
 package org.jboss.demo;
 
 import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -36,7 +35,7 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 					.orElseThrow(() -> new TransformerException(sourceName, tryStmt, "spans should be closed (span.finish()) in the finally block of the appropriate try statement."));
 			removeAllTracingHelperCalls(tryStmt);
 			tryStmt.getParentNode().get().walk(VariableDeclarationExpr.class, vde -> {
-				if (isSpanVariableDeclaration(vde, finBlock)) {
+				if (isSpanVariableStatement(vde, finBlock)) {
 					vde.removeForced();
 				}
 			});
@@ -47,7 +46,7 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 				}
 			}
 		}
-		// for some very weird reason, we have manually call the recursion here
+		// we have to manually call the recursion here
 		tryStmt.getTryBlock().walk(TryStmt.class, n -> this.visit(n, null));
 		return tryStmt;
 	}
@@ -92,9 +91,9 @@ public class TryStmtTransformer extends ModifierVisitor<Void> {
 	 * second, we need to make sure that a statement "<NAME>.finish()" finishing the
 	 * span is present in the finally block and remove those
 	 */
-	private boolean isSpanVariableDeclaration(VariableDeclarationExpr varDeclaration, BlockStmt finBlock) {
+	private boolean isSpanVariableStatement(VariableDeclarationExpr varDeclaration, BlockStmt finBlock) {
 		return isSpanVariableDeclaration(varDeclaration)
 				&& finBlock.getStatements().removeIf(finallyStmt -> finallyStmt.toString().contains(
-						varDeclaration.findFirst(VariableDeclarator.class).get().getNameAsString() + ".finish()"));
+						varDeclaration.findFirst(VariableDeclarator.class).get().getNameAsString()));
 	}
 }

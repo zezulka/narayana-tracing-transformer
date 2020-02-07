@@ -104,6 +104,30 @@ class TryStmtTransformerTest {
     }
     
     @Test
+    public void multipleSpanVarStatementsInFinallyBlock() {
+        String input = "public void mostTrivial() {\n" + 
+                "    int a;\n" + 
+                "    System.out.println(\"abcd\");\n" + 
+                "    Span span = new NaraynaSpanBuilder(a);\n" + 
+                "    try (Scope s = TracingUtils.activateSpan(span)) {\n" + 
+                "        System.out.println(\"efgh\");\n" + 
+                "    } finally {\n" + 
+                "        span.setTag(a, b);\n" +
+                "        span.finish();\n" + 
+                "    }\n" + 
+                "}";
+        String expected = "public void mostTrivial() {\n" + 
+                "    int a;\n" + 
+                "    System.out.println(\"abcd\");\n" +
+                "    com.arjuna.ats.arjuna.logging.BenchmarkLogger.logMessage();\n" +
+                "    {\n" + 
+                "        System.out.println(\"efgh\");\n" + 
+                "    }\n" + 
+                "}";
+        parseAndAssert(input, expected);
+    }
+    
+    @Test
     public void spanDeclarationSpanningOverMultipleLines() {
         String input = "public void spanDeclarationSpanningOverMultipleLines() {\n" + 
                 "    System.out.println(\"abcd\");\n" + 
